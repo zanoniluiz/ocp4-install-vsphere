@@ -18,7 +18,7 @@
 
 - name: '[OCP4-INSTALL] Ensure downloaded installers are unarchived'
   unarchive:
-    src: "{{ user_path }}/{{ pkg }}"
+    src: "{{ files_path }}/{{ pkg }}"
     dest: "{{ files_path }}"
   loop:
     - "{{ var_installer_program }}"
