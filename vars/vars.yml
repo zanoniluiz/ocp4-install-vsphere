@@ -5,6 +5,7 @@ ocp4_cluster_name: "ocp"
 kubeconfig: "{{ user_path }}/auth/kubeconfig"
 local_kubeconfig: '~/.kube/{{ cluster_name }}'
 installCreateFolder: False
+only_post_install: True
 
 #### Only in Tower-mode
 tower_used: False
