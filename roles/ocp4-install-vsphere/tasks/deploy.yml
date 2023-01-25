@@ -12,8 +12,6 @@
         jid: "{{ install.ansible_job_id }}"
       register: job_result
       until: job_result.finished
-      with_items:
-        - "{{ install.results }}"
       retries: 120
       delay: 30
     
