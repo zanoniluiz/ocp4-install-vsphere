@@ -57,4 +57,4 @@ platform:
 publish: External
 pullSecret: '{{ ocp4_pull_secret |  replace("'",'"') }}'
 sshKey: |
-  {{ sshKeyPub }}
+  {{ idrsapub.content | b64decode }}

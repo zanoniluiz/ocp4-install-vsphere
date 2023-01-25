@@ -6,3 +6,7 @@
     name: "{{ user_path }}"
     state: directory
 
+- name: '[INSTALL_CONFIG] Slurp public key'
+  slurp:
+    path: "{{ user_path }}/.ssh/id_rsa.pub"
+  register: idrsapub
