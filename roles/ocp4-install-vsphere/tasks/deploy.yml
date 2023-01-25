@@ -1,44 +1,41 @@
 ---
 
-    - name: '[INSTALL] Installing Openshift Cluster...'
-      shell: 
-        cmd: "{{ files_path }}/openshift-install create cluster --dir {{ deploy_path }} --log-level debug"
-      async: 21000
-      poll: 0
-      register: install
-    
-    - name: '[INSTALL] Checking if installation is complete... '
-      async_status:
-        jid: "{{ install.ansible_job_id }}"
-      register: job_result
-      until: job_result.finished
-      retries: 120
-      delay: 60
-    
-    - name: '[INSTALL] Output Install Log...'
-      shell:
-        cmd: "tail -13 {{ deploy_path }}/.openshift_install.log"
-      register: log_install
-    
-    - name: '[INSTALL] Print Logs Install - Info Cluster...'
-      debug:
-        var: log_install.stdout_lines
-    
-    - name: '[INSTALL] Gzip Install files...'
-      archive:
-        path: "{{ deploy_path }}/{{ item }}"
-        dest: "{{ files_path }}/{{ cluster_name }}-{{ ocp4_base_domain }}-install.gz"
-        format: gz
-      loop:
-        - .openshift_install_state.json
-        - .openshift_install.log
-        - terraform.tfvars.json
-        - terraform.tfstate
-        - metadata.json
-        - terraform.aws.auto.tfvars.json
-        - openshift-install
-        - install-config.yaml.bck
-        - .ssh
-#      when:
-#        - tower_used is defined
-#        - tower_used | bool
+- name: '[INSTALL] Installing Openshift Cluster...'
+  shell: 
+    cmd: "{{ files_path }}/openshift-install create cluster --dir {{ deploy_path }} --log-level debug"
+  async: 21000
+  poll: 0
+  register: install
+
+- name: '[INSTALL] Checking if installation is complete... '
+  async_status:
+    jid: "{{ install.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 120
+  delay: 60
+
+- name: '[INSTALL] Output Install Log...'
+  shell:
+    cmd: "tail -13 {{ deploy_path }}/.openshift_install.log"
+  register: log_install
+
+- name: '[INSTALL] Print Logs Install - Info Cluster...'
+  debug:
+    var: log_install.stdout_lines
+
+- name: '[INSTALL] Gzip Install files...'
+  archive:
+    path: 
+    - "{{ deploy_path }}/.openshift_install_state.json"
+    - "{{ deploy_path }}/.openshift_install_state.json"
+    - "{{ deploy_path }}/.openshift_install.log"
+    - "{{ deploy_path }}/terraform.tfvars.json"
+    - "{{ deploy_path }}/terraform.tfstate"
+    - "{{ deploy_path }}/metadata.json"
+    - "{{ deploy_path }}/terraform.aws.auto.tfvars.json"
+    - "{{ deploy_path }}/openshift-install"
+    - "{{ deploy_path }}/install-config.yaml.bck"
+    - "{{ user_path }}/.ssh/*"
+    dest: "{{ bkp_path }}/{{ ocp4_cluster_name }}-{{ ocp4_base_domain }}-{{ ocp4_version }}-install.tar.gz"
+    format: gz
