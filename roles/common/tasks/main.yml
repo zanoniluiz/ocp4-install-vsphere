@@ -6,6 +6,16 @@
     name: "{{ user_path }}"
     state: directory
 
+- name: '[COMMON] Create a directory for the deploy files'
+  file:
+    name: "{{ deploy_path }}"
+    state: directory
+
+- name: '[COMMON] Create a directory for the binary files'
+  file:
+    name: "{{ files_path }}"
+    state: directory
+
 - name: '[INSTALL_CONFIG] Create bin directory'
   file:
     path: "{{ user_path }}/.ssh"
