@@ -10,7 +10,7 @@ installCreateFolder: False
 tower_used: False
 
 #DNS
-ocp4_dnszone: '{{ cluster_name }}.{{ ocp4_base_domain }}'
+ocp4_dnszone: '{{ ocp4_cluster_name }}.{{ ocp4_base_domain }}'
 
 #Workers
 diskSizeWorker: "120"
