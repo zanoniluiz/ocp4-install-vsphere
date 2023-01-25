@@ -1,2 +1,7 @@
 ---
 # tasks file for roles/ocp4-install-vsphere
+- import_tasks: download.yml
+
+- import_tasks: create_config.yml
+
+- import_tasks: deploy.yml
