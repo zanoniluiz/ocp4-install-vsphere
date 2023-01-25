@@ -1,0 +1,3 @@
+---
+# vars file for roles/ocp4-post-machinesets
+name_identifier: "{{ name_label.0 }}"

@@ -1,0 +1,44 @@
+---
+# tasks file for roles/ocp4-post-machinesets
+
+- name: '[OCP4-POSTINSTALL][MACHINESET] Fetch cluster information about the Infrastructure'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    api_version: config.openshift.io/v1
+    kind: Infrastructure
+    name: cluster
+  register: cluster_info
+
+- name: '[POSTINSTALL][MACHINESET] Show info about the cluster of OCP4'
+  debug:
+    msg: "{{ cluster_info }}"
+
+- name: '[POSTINSTALL][MACHINESET] Search and fetch ami id in {{ cluster_info.resources.0.status.infrastructureName }}-master-0 machine'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    api_version: machine.openshift.io/v1beta1
+    kind: Machine
+    name: "{{ cluster_info.resources.0.status.infrastructureName }}-master-0"
+    namespace: openshift-machine-api
+  register: amimaster0
+
+- name: '[POSTINSTALL][MACHINESET] Build the {{ node_labels }} machineset facts'
+  set_fact:
+    machineset:
+      infrastructure_id: "{{ cluster_info.resources.0.status.infrastructureName }}"
+      node_labels: "{{ node_labels }}"
+      name_identifier: "{{ name_identifier }}"
+
+- name: '[POSTINSTALL][MACHINESET] Display the data for the {{ node_labels }} machinesets'
+  debug:
+    var: machineset
+
+- name: '[POSTINSTALL][MACHINESET] Create the {{ node_labels }} machineset'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    name: openshift-machine-api
+    api_version: machine.openshift.io/v1beta1
+    kind: MachineSet
+    state: present
+    resource_definition: "{{ lookup('template', 'templates/machineset.j2') }}"
+    validate_certs: false

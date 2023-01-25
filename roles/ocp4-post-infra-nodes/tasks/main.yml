@@ -1,0 +1,4 @@
+---
+# tasks file for roles/ocp4-post-infra-nodes
+
+- import_tasks: infra-nodes.yml

@@ -27,6 +27,14 @@ coresPerSocketMaster: "4"
 memoryMBMaster: "16384"
 replicasMaster: "3"
 
+#Infras
+infra_nodes: True
+diskSizeInfra: "120"
+cpuInfra: "8"
+coresPerSocketInfra: "8"
+memoryMBInfra: "32764"
+replicasInfra: "3"
+
 #Network
 cluster_Network: "10.128.0.0/14"
 machine_Network: "10.0.0.0/24"
