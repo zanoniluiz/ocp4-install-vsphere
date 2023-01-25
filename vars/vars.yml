@@ -1,0 +1,34 @@
+#General
+ocp4_version: '4.12.0'
+ocp4_base_domain: "zmlabs.co"
+ocp4_cluster_name: "ocp"
+kubeconfig: "{{ user_path }}/auth/kubeconfig"
+local_kubeconfig: '~/.kube/{{ cluster_name }}'
+installCreateFolder: False
+
+#### Only in Tower-mode
+tower_used: False
+
+#DNS
+ocp4_dnszone: '{{ cluster_name }}.{{ ocp4_base_domain }}'
+
+#Workers
+diskSizeWorker: "120"
+cpuWorkers: "4"
+coresPerWorkers: "4"
+memoryMBWorkers: "16384"
+replicasWorker: "3"
+
+#Masters
+diskSizeMaster: "120"
+cpuMaster: "4"
+coresPerSocketMaster: "4"
+memoryMBMaster: "16384"
+replicasMaster: "3"
+
+#Network
+cluster_Network: "10.128.0.0/14"
+machine_Network: "10.0.0.0/24"
+service_Network: "172.30.0.0/16"
+
+

@@ -1,0 +1,3 @@
+# User Path
+install_path: "~/ocp-ansible"
+user_path: "{{ install_path }}/{{ cluster_name }}"

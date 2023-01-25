@@ -1,2 +1,8 @@
 ---
 # tasks file for roles/common
+
+- name: '[COMMON] Create a directory for the installation'
+  file:
+    name: "{{ user_path }}"
+    state: directory
+
