@@ -7,7 +7,7 @@
       poll: 0
       register: install
     
-    - name: '[INSTALL] Check on an async task'
+    - name: '[INSTALL] Checking if installation is complete... '
       async_status:
         jid: "{{ install.ansible_job_id }}"
       register: job_result
@@ -20,11 +20,11 @@
         cmd: "tail -13 {{ deploy_path }}/.openshift_install.log"
       register: log_install
     
-    - name: '[INSTALL] Print Logs Install - Info Cluster'
+    - name: '[INSTALL] Print Logs Install - Info Cluster...'
       debug:
         var: log_install.stdout_lines
     
-    - name: '[INSTALL] Gzip Install files'
+    - name: '[INSTALL] Gzip Install files...'
       archive:
         path: "{{ deploy_path }}/{{ item }}"
         dest: "{{ files_path }}/{{ cluster_name }}-{{ ocp4_base_domain }}-install.gz"
