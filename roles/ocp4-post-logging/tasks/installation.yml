@@ -92,6 +92,10 @@
     state: present
     definition: "{{ lookup('template', 'olo-sub.yml') }}"
 
+- name: '[POSTINSTALL][LOGGING] Wait for operator to be ready'
+  pause:
+    seconds: 60
+
 - name: '[POSTINSTALL][LOGGING] Wait for Elasticsearch to be available'
   k8s_info:
     kubeconfig: "{{ kubeconfig }}"
@@ -101,7 +105,7 @@
     label_selectors:
       - name = elasticsearch-operator
     wait_sleep: 10
-    wait_timeout: 40
+    wait_timeout: 120
     wait_condition:
       status: True
       type: Ready
@@ -116,7 +120,7 @@
     label_selectors:
       - name = cluster-logging-operator
     wait_sleep: 10
-    wait_timeout: 40
+    wait_timeout: 120
     wait_condition:
       status: True
       type: Ready
