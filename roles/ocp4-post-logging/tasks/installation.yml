@@ -100,8 +100,8 @@
     namespace: openshift-operators-redhat
     label_selectors:
       - name = elasticsearch-operator
-    wait_sleep: 5
-    wait_timeout: 20
+    wait_sleep: 10
+    wait_timeout: 40
     wait_condition:
       status: True
       type: Ready
@@ -115,8 +115,8 @@
     namespace: openshift-logging
     label_selectors:
       - name = cluster-logging-operator
-    wait_sleep: 5
-    wait_timeout: 20
+    wait_sleep: 10
+    wait_timeout: 40
     wait_condition:
       status: True
       type: Ready

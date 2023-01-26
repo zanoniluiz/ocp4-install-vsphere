@@ -16,7 +16,7 @@ spec:
       audit:
         maxAge: "{{ audit_max_age }}"
     elasticsearch:
-      nodeCount: "{{ es_nodeCount }}" 
+      nodeCount: {{ es_nodeCount }} 
       nodeSelector:
         node-role.kubernetes.io/infra: ""
       tolerations:
@@ -29,6 +29,17 @@ spec:
       storage:
         storageClassName: "{{ es_storageClass }}" 
         size: "{{ es_diskSize }}"
+      resources: 
+        limits:
+          memory: "16Gi"
+        requests:
+          memory: "16Gi"
+      proxy: 
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+             memory: 256Mi
       redundancyPolicy: "{{ es_redundancy }}"
   visualization:
     type: "kibana"  
@@ -43,22 +54,9 @@ spec:
       - effect: NoExecute
         key: node-role.kubernetes.io/infra
         value: reserved
-  curation:
-    type: "curator"
-    curator:
-      nodeSelector:
-        node-role.kubernetes.io/infra: ""
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/infra
-        value: reserved
-      - effect: NoExecute
-        key: node-role.kubernetes.io/infra
-        value: reserved
-      schedule: "30 3 * * *" 
   collection:
-    logs:
-      type: "fluentd"  
+     logs:
       fluentd:
         tolerations:
-        - operator: Exists
+          - operator: Exists
+      type: fluentd

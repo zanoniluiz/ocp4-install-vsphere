@@ -62,7 +62,7 @@ app_max_age: '7d'
 infra_max_age: '7d'
 audit_max_age: '7d'
 #if you have a single replica (es_nodeCount: "1") the type of redundancy will be 'ZeroRedundancy', with 3 replicas you can use 'SingleRedundancy', 'FullRedundancy' or 'MultipleRedundancy'.
-es_nodeCount: "1"
+es_nodeCount: 1
 es_redundancy: "ZeroRedundancy"
 es_storageClass: "thin-csi"
 es_diskSize: "200Gi"
