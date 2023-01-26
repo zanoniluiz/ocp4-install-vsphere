@@ -33,12 +33,17 @@
   debug:
     var: machineset
 
-- name: '[POSTINSTALL][MACHINESET] Create the {{ node_labels }} machineset'
-  k8s:
-    kubeconfig: "{{ kubeconfig }}"
-    name: openshift-machine-api
-    api_version: machine.openshift.io/v1beta1
-    kind: MachineSet
-    state: present
-    resource_definition: "{{ lookup('template', 'templates/machineset.j2') }}"
-    validate_certs: false
+- name: '[DEBUG] generate machineset INFRA' 
+  template:
+    src: templates/machineset.j2
+    dest: "{{ files_path }}/machineset-infra-vsphere.yaml"
+
+#- name: '[POSTINSTALL][MACHINESET] Create the {{ node_labels }} machineset'
+#  k8s:
+#    kubeconfig: "{{ kubeconfig }}"
+#    name: openshift-machine-api
+#    api_version: machine.openshift.io/v1beta1
+#    kind: MachineSet
+#    state: present
+#    resource_definition: "{{ lookup('template', 'templates/machineset.j2') }}"
+#    validate_certs: false
