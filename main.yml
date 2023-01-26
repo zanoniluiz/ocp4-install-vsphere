@@ -25,3 +25,11 @@
         - infra_post_install == True
         - infra_nodes is defined
         - infra_nodes | bool
+
+    - name: '[OCP4-AUTO-INSTALL][POST-INSTALL][LOGGING] Install and configure Logging'
+      include_role:
+        name: "ocp4-post-logging"
+      when:
+        - install_logging == True
+        - logging is defined
+        - logging | bool

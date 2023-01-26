@@ -9,7 +9,7 @@
     definition: "{{ lookup('template', item) }}"
   with_items:
   - eo-namespace.yml
-  - clo-namespace.yml
+  - olo-namespace.yml
 
 ### ElasticSearch Operator
 
@@ -21,7 +21,7 @@
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
-    definition: "{{ lookup('file', 'eo-og.yml') }}"
+    definition: "{{ lookup('file', 'templates/eo-og.yml') }}"
 
 # PackageManifest holds information about a package, which is a reference to
 # one (or more) channels under a single package.
@@ -40,54 +40,84 @@
      es_channel: "{{ es_manifest.resources[0].status.defaultChannel }}"
   when: es_channel is not defined
 
-#- name: Subscribing on channel {{ es_channel }}
 # K8s module does not handle generateName correctly, so we use oc client
+- name: Subscribing on channel {{ es_channel }}
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'eo-sub.yml') }}"
+
+#- name: '[POSTINSTALL][LOGGING] Create file'
+#  template:
+#    src: eo-sub.yaml
+#    dest: /tmp/eo-sub.yaml
+#    mode: '0600'
+
+#- name: '[POSTINSTALL][LOGGING] Subscribing ES on channel {{ es_channel }}'
+#  shell:
+#    cmd: KUBECONFIG={{ kubeconfig }} {{ user_path }}/oc create -f /tmp/eo-sub.yaml
+
+#- name: '[POSTINSTALL][LOGGING] Create RBAC'
 #  k8s:
 #    kubeconfig: "{{ kubeconfig }}"
 #    state: present
-#    definition: "{{ lookup('template', 'eo-sub.yaml') }}"
-
-- name: '[POSTINSTALL][LOGGING] Create file'
-  template:
-    src: eo-sub.yaml
-    dest: /tmp/eo-sub.yaml
-    mode: '0600'
-
-- name: '[POSTINSTALL][LOGGING] Subscribing ES on channel {{ es_channel }}'
-  shell:
-    cmd: KUBECONFIG={{ kubeconfig }} {{ user_path }}/oc create -f /tmp/eo-sub.yaml
-
-- name: '[POSTINSTALL][LOGGING] Create RBAC'
-  k8s:
-    kubeconfig: "{{ kubeconfig }}"
-    state: present
-    definition: "{{ lookup('file', 'eo-rbac.yaml') }}"
+#    definition: "{{ lookup('file', 'eo-rbac.yaml') }}"
 
 
 ### ClusterLogging Operator
-- name: '[POSTINSTALL][LOGGING] Create CLO-OperatorGroup'
+- name: '[POSTINSTALL][LOGGING] Create OLO-OperatorGroup'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
-    definition: "{{ lookup('file', 'clo-og.yaml') }}"
+    definition: "{{ lookup('file', 'templates/olo-og.yml') }}"
 
-# Grab the CLO Channel if is not defined in vars.yml
-- name: '[POSTINSTALL][LOGGING] Get available CLO channels'
+# Grab the OLO Channel if is not defined in vars.yml
+- name: '[POSTINSTALL][LOGGING] Get available OLO channels'
   k8s_info:
     kubeconfig: "{{ kubeconfig }}"
     name: "cluster-logging"
     kind: "PackageManifest"
     namespace: "openshift-marketplace"
-  register: clo_manifest
-  when: clo_channel is not defined
+  register: olo_manifest
+  when: olo_channel is not defined
 
 - name: '[POSTINSTALL][LOGGING] Set local var'
   set_fact:
-     clo_channel: "{{ clo_manifest.resources[0].status.defaultChannel }}"
-  when: clo_channel is not defined
+     olo_channel: "{{ olo_manifest.resources[0].status.defaultChannel }}"
+  when: olo_channel is not defined
 
-- name: '[POSTINSTALL][LOGGING] Create CLO-Subscription on channel {{ clo_channel }}'
+- name: '[POSTINSTALL][LOGGING] Create OLO-Subscription on channel {{ olo_channel }}'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
-    definition: "{{ lookup('template', 'clo-sub.yaml') }}"
+    definition: "{{ lookup('template', 'olo-sub.yml') }}"
+
+- name: '[POSTINSTALL][LOGGING] Wait for Elasticsearch to be available'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    kind: Pod
+    wait: yes
+    namespace: openshift-operators-redhat
+    label_selectors:
+      - name = elasticsearch-operator
+    wait_sleep: 5
+    wait_timeout: 20
+    wait_condition:
+      status: True
+      type: Ready
+    validate_certs: false
+
+- name: '[POSTINSTALL][LOGGING] Wait for OpenShift Logging Operator to be available'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    kind: Pod
+    wait: yes
+    namespace: openshift-logging
+    label_selectors:
+      - name = cluster-logging-operator
+    wait_sleep: 5
+    wait_timeout: 20
+    wait_condition:
+      status: True
+      type: Ready
+    validate_certs: false
