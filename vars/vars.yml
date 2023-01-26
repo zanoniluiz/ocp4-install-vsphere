@@ -51,7 +51,7 @@ alertManagerSizeGB: "2Gi"
 storageClassMonitoring: "thin-csi"
 
 #Logging
-install_logging: True
+install_logging: False
 logging: True
 clo_node_selector: "node-role.kubernetes.io/infra="
 es_channel: "stable" #Define the ES version of the operator
@@ -66,3 +66,7 @@ es_nodeCount: 1
 es_redundancy: "ZeroRedundancy"
 es_storageClass: "thin-csi"
 es_diskSize: "200Gi"
+
+
+#ODF
+install_odf: True

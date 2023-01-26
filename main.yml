@@ -33,3 +33,11 @@
         - install_logging == True
         - logging is defined
         - logging | bool
+
+    - name: '[OCP4-AUTO-INSTALL][POST-INSTALL][ODF] Install and configure ODF'
+      include_role:
+        name: "ocp4-post-odf"
+      when:
+        - install_odf == True
+        - logging is defined
+        - logging | bool
