@@ -16,6 +16,11 @@
     name: "{{ files_path }}"
     state: directory
 
+- name: '[COMMON] Create a directory for the backup files'
+  file:
+    name: "{{ bkp_path }}"
+    state: directory
+
 - name: '[INSTALL_CONFIG] Create bin directory'
   file:
     path: "{{ user_path }}/.ssh"
@@ -30,3 +35,12 @@
   slurp:
     path: "{{ user_path }}/.ssh/id_rsa.pub"
   register: idrsapub
+
+- name: '[INSTALL_CONFIG] [PREREQS] Copy python prerequisites file'
+  copy:
+    src: ./requirements.txt
+    dest: "{{ user_path }}/requirements.txt"
+    
+- name: '[INSTALL_CONFIG] [PREREQS] Install python prerequisites'
+  pip:
+    requirements: "{{ user_path }}/requirements.txt"

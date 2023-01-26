@@ -8,6 +8,13 @@
     name: cluster
   register: infradata
 
+- name: '[POSTINSTALL][INFRA-NODES] Create Machine Config Pool Infra'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'mcp-infra.yml') }}"
+    validate_certs: false
+
 - name: '[POSTINSTALL][INFRA-NODES] Deploy Infra Nodes MachineSet'
   vars:
     node_labels:
@@ -16,39 +23,70 @@
   include_role:
     name: ocp4-post-machinesets
 
-#- name: '[POSTINSTALL][INFRA-NODES] Wait for Infra Nodes to be available'
-#  k8s_info:
-#    kubeconfig: "{{ kubeconfig }}"
-#    api_version: v1
-#    kind: Node
-#    label_selectors:
-#    - node-role.kubernetes.io/infra =
-#  register: r_infra_nodes
-#  until:
-#  - r_infra_nodes.resources | length | int == infra_node_replicas | int
-#  delay: 30
-#  retries: 15
-#
-#- name: '[POSTINSTALL][INFRA-NODES] Get ClusterVersion'
-#  k8s_info:
-#    kubeconfig: "{{ kubeconfig }}"
-#    api_version: config.openshift.io/v1
-#    kind: ClusterVersion
-#    name: version
-#  register: r_cluster_version
-#
-#- name: '[POSTINSTALL][INFRA-NODES] Set ocp4_workload_machinesets_cluster_version fact'
-#  set_fact:
-#    ocp4_workload_machinesets_cluster_version: "{{ r_cluster_version.resources[0].status.history[0].version }}"
-#
-#- name: '[POSTINSTALL][INFRA-NODES] Configure Ingress Controllers and Image Registry'
-#  when: ocp4_workload_machinesets_cluster_version is version_compare('4.5', '<')
-#  k8s:
-#    kubeconfig: "{{ kubeconfig }}"
-#    state: present
-#    merge_type:
-#    - merge
-#    definition: "{{ lookup('template', '{{ item }}') }}"
-#  loop:
-#  - ./templates/ingress-controller.j2
-#  - ./templates/image-registry.j2
+- name: '[POSTINSTALL][INFRA-NODES] Wait for Infra Nodes to be available'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    api_version: v1
+    kind: Node
+    label_selectors:
+    - node-role.kubernetes.io/infra =
+  register: r_infra_nodes
+  until:
+  - r_infra_nodes.resources | length | int == infra_node_replicas | int
+  delay: 30
+  retries: 15
+
+- name: '[POSTINSTALL][INFRA-NODES] Get ClusterVersion'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    api_version: config.openshift.io/v1
+    kind: ClusterVersion
+    name: version
+  register: r_cluster_version
+
+- name: '[POSTINSTALL][INFRA-NODES] Set ocp4_workload_machinesets_cluster_version fact'
+  set_fact:
+    ocp4_workload_machinesets_cluster_version: "{{ r_cluster_version.resources[0].status.history[0].version }}"
+
+- name: '[DEBUG] - PRINT CLUSTER VERSION'
+  debug:
+    msg: 
+    - "Cluster Version is: {{ ocp4_workload_machinesets_cluster_version }}"
+
+- name: '[POSTINSTALL][INFRA-NODES] Configure Ingress Controllers and Image Registry'
+  when: ocp4_workload_machinesets_cluster_version is version_compare('4.10', '>')
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    merge_type:
+    - merge
+    definition: "{{ lookup('template', '{{ item }}') }}"
+  loop:
+  - ingress-controller-default.j2
+  - image-registry.j2
+
+- name: '[POSTINSTALL][INFRA-NODES] Configure Cluster Monitoring'
+  when: ocp4_workload_machinesets_cluster_version is version_compare('4.10', '>')
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    merge_type:
+    - merge
+    definition: "{{ lookup('template', '{{ item }}') }}"
+  loop:
+  - configmap-cluster-monitoring.j2
+
+- name: '[POSTINSTALL][INFRA-NODES] Wait for Cluster Monitoring to be available'
+  k8s_info:
+    kind: Pod
+    wait: yes
+    name: '{{ item }}'
+    namespace: openshift-monitoring
+    wait_sleep: 5
+    wait_timeout: 20
+    validate_certs: false
+  loop:
+  - alertmanager-main-0
+  - alertmanager-main-1
+  - prometheus-k8s-0
+  - prometheus-k8s-1

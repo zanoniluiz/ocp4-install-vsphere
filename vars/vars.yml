@@ -2,10 +2,12 @@
 ocp4_version: '4.12.0'
 ocp4_base_domain: "zmlabs.co"
 ocp4_cluster_name: "ocp"
-kubeconfig: "{{ user_path }}/auth/kubeconfig"
+kubeconfig: "{{ deploy_path }}/auth/kubeconfig"
 local_kubeconfig: '~/.kube/{{ cluster_name }}'
 installCreateFolder: False
 only_post_install: False
+infra_post_install: False
+pre_reqs_install: False
 
 #### Only in Tower-mode
 tower_used: False
@@ -28,7 +30,9 @@ memoryMBMaster: "16384"
 replicasMaster: "3"
 
 #Infras
+infra_label: infra
 infra_nodes: True
+infra_node_replicas: "3"
 diskSizeInfra: "120"
 cpuInfra: "8"
 coresPerSocketInfra: "8"
@@ -41,3 +45,13 @@ machine_Network: "10.0.0.0/24"
 service_Network: "172.30.0.0/16"
 
 
+#Monitoring
+prometheusSizeGB: "40Gi"
+alertManagerSizeGB: "2Gi"
+storageClassMonitoring: "thin-csi"
+
+# Logging
+logging: True
+clo_node_selector: "node-role.kubernetes.io/infra="
+es_channel: "stable" #Define the ES version of the operator
+clo_channel: 4.3 #Define the ClusterLogging version of the operator

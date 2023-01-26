@@ -10,17 +10,18 @@
       include_role:
         name: "common"
       when:
-        - only_post_install != True
+        - pre_reqs_install == True
 
     - name: '[OCP4-AUTO-INSTALL][INSTALL] Installation of the OCP4 Cluster'
       include_role:
         name: "ocp4-install-vsphere"
       when:
-        - only_post_install != True
+        - only_post_install == True
 
     - name: '[OCP4-AUTO-INSTALL][POST-INSTALL][INFRA-NODES] Deploy and configure Infra Nodes'
       include_role:
         name: "ocp4-post-infra-nodes"
       when:
+        - infra_post_install == True
         - infra_nodes is defined
         - infra_nodes | bool

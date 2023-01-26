@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-logging
+{%if clo_node_selector is defined %}
+  annotations:    
+    openshift.io/node-selector: "{{ clo_node_selector }}"
+    scheduler.alpha.kubernetes.io/defaultTolerations: '[{"Key": "node-role.kubernetes.io/infra", "Value": "reserved", "Effect": "NoSchedule"},{"Key": "node-role.kubernetes.io/infra", "Value": "reserved", "Effect": "NoExecute"}]'
+{% endif %}
+  labels:
+    openshift.io/cluster-monitoring: "true"
