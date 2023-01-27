@@ -5,9 +5,9 @@ ocp4_cluster_name: "ocp"
 kubeconfig: "{{ deploy_path }}/auth/kubeconfig"
 local_kubeconfig: '~/.kube/{{ cluster_name }}'
 installCreateFolder: False
-only_post_install: False
-infra_post_install: False
-pre_reqs_install: False
+pre_reqs_install: True
+only_post_install: True
+infra_post_install: True
 
 #### Only in Tower-mode
 tower_used: False
@@ -51,7 +51,7 @@ alertManagerSizeGB: "2Gi"
 storageClassMonitoring: "thin-csi"
 
 #Logging
-install_logging: False
+install_logging: True
 logging: True
 clo_node_selector: "node-role.kubernetes.io/infra="
 es_channel: "stable" #Define the ES version of the operator
@@ -69,4 +69,4 @@ es_diskSize: "200Gi"
 
 
 #ODF
-install_odf: True
+install_odf: False
