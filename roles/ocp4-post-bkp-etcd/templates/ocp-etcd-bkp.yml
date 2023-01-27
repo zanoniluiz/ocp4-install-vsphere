@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ocp-etcd-bkp
+  name: {{ ns_bkp_etcd }}
   annotations:
     openshift.io/node-selector: ''
     openshift.io/description: Openshift Backup Automation Tool

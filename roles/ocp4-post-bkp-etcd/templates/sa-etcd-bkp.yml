@@ -3,6 +3,6 @@ kind: ServiceAccount
 apiVersion: v1
 metadata:
   name: openshift-backup
-  namespace: ocp-etcd-backup
+  namespace: {{ ns_bkp_etcd }}
   labels:
     app: openshift-backup

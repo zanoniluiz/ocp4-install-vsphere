@@ -5,27 +5,87 @@
     kubeconfig: "{{ kubeconfig }}"
     state: present
     definition: "{{ lookup('template', 'templates/ocp-etcd-bkp.yml') }}"
+    validate_certs: false
+    validate:
+      fail_on_error: yes
 
 - name: '[POSTINSTALL][BKP-ETCD] Create Service Account'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
     definition: "{{ lookup('template', 'templates/sa-etcd-bkp.yml') }}"
-
+    validate_certs: false
+    validate:
+      fail_on_error: yes
+  
 - name: '[POSTINSTALL][BKP-ETCD] Create Cluster Role BKP ETCD'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
     definition: "{{ lookup('template', 'templates/cluster-role-etcd-bkp.yml') }}"
+    validate_certs: false
+    validate:
+      fail_on_error: yes
 
 - name: '[POSTINSTALL][BKP-ETCD] Create Cluster Role Binding BKP ETCD'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
     definition: "{{ lookup('template', 'templates/role-binding-etcd-bkp.yml') }}"
+    validate_certs: false
+    validate:
+      fail_on_error: yes
 
 - name: '[POSTINSTALL][BKP-ETCD] Attaching SCC to SAs BKP ETCD'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
     definition: "{{ lookup('template', 'templates/scc-privileged-etcd-bkp.yml') }}"
+    validate_certs: false
+    validate:
+      fail_on_error: yes
+
+- name: '[POSTINSTALL][BKP-ETCD] Create CronJob BKP ETCD LOCAL'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/cronjob-local-etcd-bkp.yml') }}"
+    validate_certs: false
+    validate:
+      fail_on_error: yes
+  when: bkp_etcd_local == True
+
+- name: '[POSTINSTALL][BKP-ETCD] Create CronJob BKP ETCD NFS'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/cronjob-local-etcd-bkp.yml') }}"
+    validate_certs: false
+    validate:
+      fail_on_error: yes 
+  when: bkp_etcd_nfs == True
+
+- name: '[DEBUG] - command'
+  debug:
+    msg:
+      - "{{ files_path }}/oc --kubeconfig {{ kubeconfig }} --namespace {{ ns_bkp_etcd }} create job --from=cronjob/openshift-backup-local --insecure-skip-tls-verify test-bkp"
+
+- name: '[POSTINSTALL][BKP-ETCD] Create Job Test BKP ETCD '
+  command: "{{ files_path }}/oc --kubeconfig {{ kubeconfig }} --namespace {{ ns_bkp_etcd }} create job --from=cronjob/openshift-backup-local --insecure-skip-tls-verify test-bkp"
+  register: test_job
+  failed_when:
+    - test_job.rc != 0
+    - '"already exists" not in test_job.stdout'
+  when: bkp_etcd_local == True
+
+
+- name: '[POSTINSTALL][BKP-ETCD] Create Job Test BKP ETCD '
+  command: "{{ files_path }}/oc --kubeconfig {{ kubeconfig }} --namespace {{ ns_bkp_etcd }} create job --from=cronjob/openshift-backup-nfs --insecure-skip-tls-verify test-bkp"
+  register: test_job
+  failed_when:
+    - test_job.rc != 0
+    - '"already exists" not in test_job.stdout'
+  when: bkp_etcd_nfs == True
+
+- name: Wait for job to finish
+  command: "{{ files_path }}/oc --kubeconfig {{ kubeconfig }} --namespace {{ ns_bkp_etcd }} wait --timeout=360s --for=condition=complete --insecure-skip-tls-verify job/test-bkp"
