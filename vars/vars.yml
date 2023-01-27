@@ -5,9 +5,11 @@ ocp4_cluster_name: "ocp"
 kubeconfig: "{{ deploy_path }}/auth/kubeconfig"
 local_kubeconfig: '~/.kube/{{ cluster_name }}'
 installCreateFolder: False
-pre_reqs_install: True
-only_post_install: True
-infra_post_install: True
+pre_reqs_install: False
+only_post_install: False
+infra_post_install: False
+bkp_etcd_post_install: True
+install_odf: False
 
 #### Only in Tower-mode
 tower_used: False

@@ -1,0 +1,8 @@
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: openshift-backup
+  namespace: ocp-etcd-backup
+  labels:
+    app: openshift-backup

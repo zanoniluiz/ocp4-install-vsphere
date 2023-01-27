@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ocp-etcd-bkp
+  annotations:
+    openshift.io/node-selector: ''
+    openshift.io/description: Openshift Backup Automation Tool
+    openshift.io/display-name: Backup ETCD Automation
+  labels:
+    openshift.io/cluster-monitoring: "true"

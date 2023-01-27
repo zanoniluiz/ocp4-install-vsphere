@@ -1,0 +1,31 @@
+---
+# tasks file for roles/ocp4-post-bkp-etcd
+- name: '[POSTINSTALL][BKP-ETCD] Create Namespaces'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/ocp-etcd-bkp.yml') }}"
+
+- name: '[POSTINSTALL][BKP-ETCD] Create Service Account'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/sa-etcd-bkp.yml') }}"
+
+- name: '[POSTINSTALL][BKP-ETCD] Create Cluster Role BKP ETCD'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/cluster-role-etcd-bkp.yml') }}"
+
+- name: '[POSTINSTALL][BKP-ETCD] Create Cluster Role Binding BKP ETCD'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/role-binding-etcd-bkp.yml') }}"
+
+- name: '[POSTINSTALL][BKP-ETCD] Attaching SCC to SAs BKP ETCD'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/scc-privileged-etcd-bkp.yml') }}"
