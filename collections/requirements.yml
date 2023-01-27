@@ -6,3 +6,7 @@ collections:
   - name: community.crypto.openssh_keypair
     version: 2.10.0
     source: https://galaxy.ansible.com
+
+  - name: ansible.posix
+    version: 1.5.1
+    source: https://galaxy.ansible.com
