@@ -13,7 +13,7 @@
   debug:
     msg: "{{ cluster_info }}"
 
-- name: '[POSTINSTALL][MACHINESET] Search and fetch ami id in {{ cluster_info.resources.0.status.infrastructureName }}-master-0 machine'
+- name: '[POSTINSTALL][MACHINESET] Search and fetch Infra id in {{ cluster_info.resources.0.status.infrastructureName }}-master-0 machine'
   k8s_info:
     kubeconfig: "{{ kubeconfig }}"
     api_version: machine.openshift.io/v1beta1
@@ -37,8 +37,15 @@
   template:
     src: machineset-infra-vsphere.j2
     dest: "{{ files_path }}/machineset-infra-vsphere.yaml"
+  when: infra_post_install == True
 
-- name: '[POSTINSTALL][MACHINESET] Create the {{ node_labels }} machineset'
+- name: '[POSTINSTALL][MACHINESET] Create File Machineset for the{{ node_labels }} machineset'
+  template:
+    src: machineset-odf-vsphere.j2
+    dest: "{{ files_path }}/machineset-odf-vsphere.yaml"
+  when: install_odf == True
+
+- name: '[POSTINSTALL][MACHINESET] Create the {{ infra_label }} machineset'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     name: openshift-machine-api
@@ -47,3 +54,15 @@
     state: present
     resource_definition: "{{ lookup('template', 'machineset-infra-vsphere.j2') }}"
     validate_certs: false
+  when: infra_post_install == True
+
+- name: '[POSTINSTALL][MACHINESET] Create the {{ odf_label }} machineset'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    name: openshift-machine-api
+    api_version: machine.openshift.io/v1beta1
+    kind: MachineSet
+    state: present
+    resource_definition: "{{ lookup('template', 'machineset-odf-vsphere.j2') }}"
+    validate_certs: false
+  when: install_odf == True

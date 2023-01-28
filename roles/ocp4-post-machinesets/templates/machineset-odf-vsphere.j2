@@ -1,0 +1,57 @@
+---
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  name: {{ machineset.infrastructure_id }}-{{ machineset.name_identifier }}
+  namespace: openshift-machine-api
+  labels:
+    machine.openshift.io/cluster-api-cluster: {{ machineset.infrastructure_id }}
+spec:
+  replicas: {{ replicasOdf }}
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: {{ machineset.infrastructure_id }}
+      machine.openshift.io/cluster-api-machineset: {{ machineset.infrastructure_id }}-{{ machineset.name_identifier }}
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: {{ machineset.infrastructure_id }}
+        machine.openshift.io/cluster-api-machine-role: {{ infra_label }}
+        machine.openshift.io/cluster-api-machine-type: {{ infra_label }}
+        machine.openshift.io/cluster-api-machineset: {{ machineset.infrastructure_id }}-{{ machineset.name_identifier }}
+    spec:
+      lifecycleHooks: {}
+      metadata:
+        labels:
+          node-role.kubernetes.io/infra: ""
+          node-role.kubernetes.io: infra
+          cluster.ocs.openshift.io/openshift-storage: ""
+      taints:
+      - effect: NoSchedule
+        key: node.ocs.openshift.io/storage
+        value: "true"
+      providerSpec:
+        value:
+          numCoresPerSocket: {{ coresPerSocketOdf }}
+          diskGiB: {{ diskSizeOdf }}
+          snapshot: ''
+          userDataSecret:
+            name: worker-user-data
+          memoryMiB: {{ memoryMBOdf }}
+          credentialsSecret:
+            name: vsphere-cloud-credentials
+          network:
+            devices:
+              - networkName: {{ vsphereNetwork }}
+          metadata:
+            creationTimestamp: null
+          numCPUs: {{ cpuOdf }}
+          kind: VSphereMachineProviderSpec
+          workspace:
+            datacenter: {{ vsphereDatacenter }}
+            datastore: {{ vsphereDatastore }}
+            folder: {{ vsphereFolder }}
+            resourcePool: /{{ vsphereDatacenter }}/host/{{ vsphereCluster }}/Resources
+            server: {{ vsphereVcenter }}
+          template: {{ machineset.infrastructure_id }}-rhcos
+          apiVersion: machine.openshift.io/v1beta1

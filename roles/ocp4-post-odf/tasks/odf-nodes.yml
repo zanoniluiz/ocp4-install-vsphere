@@ -1,0 +1,68 @@
+---
+
+- name: '[POSTINSTALL][ODF-NODES] Wait for Cluster to be ready'
+  pause:
+    seconds: 30
+
+- name: '[POSTINSTALL][ODF-NODES] Grab some global cluster trivia for git to use'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    api_version: config.openshift.io/v1
+    kind: Infrastructure
+    name: cluster
+  register: infradata
+  when: mcp_odf == True
+
+- name: '[POSTINSTALL][ODF-NODES] Create Machine Config Pool ODF'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'mcp-odf.yml') }}"
+    validate_certs: false
+  when: mcp_odf == True
+
+- name: '[POSTINSTALL][ODF-NODES] Deploy ODF Nodes MachineSet'
+  vars:
+    node_labels:
+    - "{{ odf_label }}"
+    name_identifier: "{{ odf_label }}"
+  include_role:
+    name: ocp4-post-machinesets
+
+- name: '[POSTINSTALL][ODF-NODES] Wait for ODF Nodes to be available'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    api_version: v1
+    kind: Node
+    label_selectors:
+    - cluster.ocs.openshift.io/openshift-storage =
+  register: r_odf_nodes
+  until:
+  - r_odf_nodes.resources | length | int == replicasOdf | int
+  - r_odf_nodes.resources.0.status.conditions | selectattr('type', 'match', '^Ready$') | map(attribute='status') | join | bool == True
+  delay: 60
+  retries: 30
+
+- name: '[DEBUG] - PRINT RESOURCES ODF NODES'
+  debug:
+    var: r_odf_nodes.resources.0.status.conditions | selectattr('type', 'match', '^Ready$') | map(attribute='status') | join | bool == True
+ #with_items: "{{ r_odf_nodes.resources }}"
+- name: '[POSTINSTALL][ODF-NODES] Get ClusterVersion'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    api_version: config.openshift.io/v1
+    kind: ClusterVersion
+    name: version
+  register: r_cluster_version
+
+- name: '[POSTINSTALL][INFRA-NODES] Set ocp4_workload_machinesets_cluster_version fact'
+  set_fact:
+    ocp4_workload_machinesets_cluster_version: "{{ r_cluster_version.resources[0].status.history[0].version }}"
+- name: '[POSTINSTALL][ODF-NODES] Wait for ODF Nodes to be ready'
+  pause:
+    seconds: 60
+- name: '[POSTINSTALL][ODF-NODES] - Print Cluster Version'
+  debug:
+    msg: 
+    - "Cluster Version is: {{ ocp4_workload_machinesets_cluster_version }}"
+

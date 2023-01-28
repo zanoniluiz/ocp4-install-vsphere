@@ -1,0 +1,6 @@
+---
+- name: '[POSTINSTALL][ODF] Setup ODF Operator'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/odf-operator.yml') }}"

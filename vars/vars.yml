@@ -12,7 +12,7 @@ only_post_install: True
 infra_post_install: True
 install_logging: True
 bkp_etcd_post_install: True
-install_odf: False
+install_odf: True
 
 
 #### Only in Tower-mode
@@ -72,10 +72,18 @@ es_redundancy: "ZeroRedundancy"
 es_storageClass: "thin-csi"
 es_diskSize: "200Gi"
 
-#ODF
-install_odf: False
-
 #BKP_ETCD
 ns_bkp_etcd: "ocp-etcd-backup"
 bkp_etcd_nfs: False
 bkp_etcd_local: True
+
+#ODF
+install_odf: True
+mcp_odf: False
+odf_label: odf
+diskSizeOdf: "120"
+cpuOdf: "4"
+coresPerSocketOdf: "4"
+memoryMBOdf: "16384"
+replicasOdf: "3"
+
