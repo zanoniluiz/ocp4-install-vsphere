@@ -1,0 +1,59 @@
+apiVersion: v1
+baseDomain: {{ ocp4_base_domain }}
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform:
+    vsphere:
+      osDisk:
+        diskSizeGB: {{ diskSizeWorker }}
+      cpus: {{ cpuWorkers }}
+      coresPerSocket: {{ coresPerWorkers }}
+      memoryMB: {{ memoryMBWorkers }}
+  replicas: {{ replicasWorker }}
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform:
+    vsphere:
+      osDisk:
+        diskSizeGB: {{ diskSizeMaster}}
+      cpus: {{ cpuMaster }}
+      coresPerSocket: {{ coresPerSocketMaster }}
+      memoryMB: {{ memoryMBMaster }}
+  replicas: {{ replicasMaster }}
+metadata:
+  creationTimestamp: null
+  name: {{ ocp4_cluster_name }}
+networking:
+  clusterNetwork:
+  - cidr: {{ cluster_Network }}
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: {{ machine_Network }}
+  networkType: OVNKubernetes
+  serviceNetwork:
+  - {{ service_Network }}
+platform:
+  vsphere:
+    apiVIP:
+    - {{ apiVip }}
+    cluster: {{ vsphereCluster }}
+    datacenter: {{ vsphereDatacenter }}
+    defaultDatastore: {{ vsphereDatastore }}
+    ingressVIP:
+    - {{ ingressVip }}
+    network: {{ vsphereNetwork }}
+    password: {{ vspherePassword }}
+    username: {{ vsphereUsername }}
+    vCenter: {{ vsphereVcenter }}
+{% if installCreateFolder != True %}
+    folder: {{ vsphereFolder }}
+{% endif %}
+    diskType: {{ vsphereDiskType }}
+publish: External
+pullSecret: '{{ ocp4_pull_secret |  replace("'",'"') }}'
+sshKey: |
+  {{ idrsapub.content | b64decode }}
