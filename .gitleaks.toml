@@ -1,0 +1,10 @@
+[allowlist]
+  description = "Global Allowlist"
+
+  # Ignore based on any subset of the file path
+  paths = [
+    '''collections\/openshift\/ansible_collections\/''',
+                
+    # Ignore some long path
+    '''examples\/some\/long\/path\/server.key$''',
+  ]
