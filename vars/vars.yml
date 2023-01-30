@@ -6,13 +6,18 @@ kubeconfig: "{{ deploy_path }}/auth/kubeconfig"
 local_kubeconfig: '~/.kube/{{ cluster_name }}'
 installCreateFolder: False
 
+dns_api: "api.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
+dns_ingress: "random.apps.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
+
 #Modules
-pre_reqs_install: True
-only_post_install: True
-infra_post_install: True
-install_logging: True
-bkp_etcd_post_install: True
-install_odf: True
+#NOTA: Set TRUE on the modules you want implemented
+check_pre_reqs: True
+pre_reqs_install: False
+only_post_install: False
+infra_post_install: False
+install_logging: False
+bkp_etcd_post_install: False
+install_odf: False
 
 
 #### Only in Tower-mode
@@ -78,7 +83,6 @@ bkp_etcd_nfs: False
 bkp_etcd_local: True
 
 #ODF
-install_odf: True
 mcp_odf: False
 odf_label: odf
 diskSizeOdf: "120"

@@ -1,0 +1,29 @@
+---
+
+- name: '[PRE-INSTALL] - Check Connectivity IP API'
+  shell:
+    cmd: ping -c 5 -q -W 1 "{{ apiVip }}" | grep -c "0 received"
+  register: ping_api_out
+  ignore_errors: true
+  no_log: true
+
+- name: '[PRE-INSTALL] - IPs API em uso?'
+  assert: 
+    that:
+      - "ping_api_out.rc == 0"
+    fail_msg: "O ip {{ apiVip }} já está em uso"
+    success_msg: "O ip {{ apiVip }} não está em uso"
+
+- name: '[PRE-INSTALL] - Check Connectivity IP Ingress'
+  shell:
+    cmd: ping -c 5 -q -W 1 "{{ ingressVip | default('8.8.8.8') }}" | grep -c "0 received"
+  register: ping_ingress_out
+  ignore_errors: true
+  no_log: true
+
+- name: '[PRE-INSTALL] - IPs Ingress em uso?'
+  assert: 
+    that:
+      - "ping_ingress_out.rc == 0"
+    fail_msg: "O ip {{ ingressVip }} já está em uso"
+    success_msg: "O ip {{ ingressVip }} não está em uso"

@@ -1,0 +1,9 @@
+---
+
+- name: '[PRE-INSTALL] - Check DNS API'
+  debug:
+    msg: "{{ lookup('community.general.dig', dns_api)}}"
+
+- name: '[PRE-INSTALL] - Check DNS Ingress'
+  debug:
+    msg: "{{ lookup('community.general.dig', dns_ingress)}}"

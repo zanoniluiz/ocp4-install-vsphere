@@ -1,0 +1,6 @@
+---
+# tasks file for roles/ocp4-pre-install
+
+- import_tasks: check-dns.yml
+- import_tasks: check-vips.yml
+- import_tasks: download-certs-vsphere.yml

@@ -1,0 +1,15 @@
+- name: '[PRE-INSTALL] - Download Certs vSphere'
+  get_url:
+    url: "https://{{ vsphereVcenter }}/certs/download.zip"
+    dest: "{{ files_path }}/certs-vsphere.zip"
+    validate_certs: false
+
+- name: '[PRE-INSTALL] - Ensure downloaded certificates vSphere are unarchived'
+  unarchive:
+    src: "{{ files_path }}/certs-vsphere.zip"
+    dest: "{{ files_path }}"
+
+- name: '[PRE-INSTALL] - Install certificates vSphere'
+  shell:
+    cmd: "update-ca-trust extract"
+

@@ -3,10 +3,18 @@ collections:
     version: 2.3.2
     source: https://galaxy.ansible.com
 
-  - name: community.crypto.openssh_keypair
+  - name: community.crypto
     version: 2.10.0
     source: https://galaxy.ansible.com
 
   - name: ansible.posix
     version: 1.5.1
+    source: https://galaxy.ansible.com
+
+  - name: community.general
+    version: 6.1.0
+    source: https://galaxy.ansible.com
+
+  - name: ansible.netcommon
+    version: 4.1.0
     source: https://galaxy.ansible.com

@@ -3,3 +3,4 @@ psutil
 boto3
 botocore
 kubernetes-validate
+dnspython
