@@ -23,17 +23,15 @@ spec:
       lifecycleHooks: {}
       metadata:
         labels:
-{% for label in machineset.node_labels %}
-          node-role.kubernetes.io/{{ label }}: ""
-          node-role.kubernetes.io: {{ label }}
+          node-role.kubernetes.io/{{ infra_label }}: ""
+          node-role.kubernetes.io: {{ infra_label }}
       taints:
       - effect: NoSchedule
-        key: node-role.kubernetes.io/{{ label }}
+        key: node-role.kubernetes.io/{{ infra_label }}
         value: reserved
       - effect: NoExecute
-        key: node-role.kubernetes.io/{{ label }}
+        key: node-role.kubernetes.io/{{ infra_label }}
         value: reserved
-{% endfor %}
       providerSpec:
         value:
           numCoresPerSocket: {{ coresPerSocketInfra }}
