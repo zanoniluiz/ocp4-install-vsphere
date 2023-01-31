@@ -42,14 +42,14 @@
       when:
         - install_logging == True
 
-    - name: '[OCP4-AUTO-INSTALL][POST-INSTALL][BKP-ETCD] Configure Backup ETCD'
-      include_role:
-        name: "ocp4-post-bkp-etcd"
-      when:
-        - bkp_etcd_post_install == True
-
     - name: '[OCP4-AUTO-INSTALL][POST-INSTALL][ODF] Install and configure ODF'
       include_role:
         name: "ocp4-post-odf"
       when:
         - install_odf == True
+
+    - name: '[OCP4-AUTO-INSTALL][POST-INSTALL][BKP-ETCD] Configure Backup ETCD'
+      include_role:
+        name: "ocp4-post-bkp-etcd"
+      when:
+        - bkp_etcd_post_install == True
