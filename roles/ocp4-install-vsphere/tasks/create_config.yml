@@ -1,16 +1,19 @@
 ---
 
-- name: '[INSTALL_CONFIG] Generate config install-config.yaml'
-  template:
-    src: install-config-yml-4-10.j2
-    dest: "{{ deploy_path }}/install-config.yaml"
-  when: ocp4_version == 4.10
+- set_fact:
+    template_config: "{% if ocp4_version == 4.10.* %}install-config-yml-4-10.j2{% elif ocp4_version == 4.12.* %}install-config-yml-4-12.j2{% endif %}"
 
 - name: '[INSTALL_CONFIG] Generate config install-config.yaml'
   template:
-    src: install-config-yml-4-12.j2
+    src: "{{ template_config }}"
     dest: "{{ deploy_path }}/install-config.yaml"
-  when: ocp4_version == 4.12
+#  when: ocp4_version < 4.11
+
+#- name: '[INSTALL_CONFIG] Generate config install-config.yaml'
+#  template:
+#    src: install-config-yml-4-12.j2
+#    dest: "{{ deploy_path }}/install-config.yaml"
+#  when: ocp4_version == 4.12.x
 
 - name: '[INSTALL_CONFIG] Make a copy of the cluster install config for backup purposes'
   copy:
