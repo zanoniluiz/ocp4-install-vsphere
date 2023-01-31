@@ -1,7 +1,9 @@
 ---
 
 - set_fact:
-    template_config: "{% if ocp4_version == 4.10.* %}install-config-yml-4-10.j2{% elif ocp4_version == 4.12.* %}install-config-yml-4-12.j2{% endif %}"
+    template_config: "{% if ocp4_version == 4.10.* %}install-config-yml-4-10.j2
+                      {% else ocp4_version == 4.12.* %}install-config-yml-4-12.j2
+                      {% endif %}"
 
 - name: '[INSTALL_CONFIG] Generate config install-config.yaml'
   template:
