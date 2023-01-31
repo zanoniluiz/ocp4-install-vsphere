@@ -1,4 +1,4 @@
 ---
 # vars file for roles/ocp4-post-infra-nodes
-name_identifier: "{{ name_label.0 }}"
+#name_identifier: "{{ name_label.0 }}"
 node_labels: "{{ infra_label }}"
