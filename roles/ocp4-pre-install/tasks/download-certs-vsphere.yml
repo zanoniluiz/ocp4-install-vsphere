@@ -9,6 +9,11 @@
     src: "{{ files_path }}/certs-vsphere.zip"
     dest: "{{ files_path }}"
 
+- name: '[PRE-INSTALL] Copy Certificates vSphere'
+  copy:
+    src: "{{ files_path }}/certs/lin/"
+    dest: "/etc/pki/ca-trust/source/anchors"
+
 - name: '[PRE-INSTALL] - Install certificates vSphere'
   shell:
     cmd: "update-ca-trust extract"
