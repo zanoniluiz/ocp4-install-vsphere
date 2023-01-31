@@ -42,8 +42,8 @@
   set_fact:
     machineset:
       infrastructure_id: "{{ cluster_info.resources.0.status.infrastructureName }}"
-      node_labels: "{{ node_labels }}"
-      name_identifier: "{{ name_identifier }}"
+      node_labels: "{{ odf_label }}"
+      name_identifier: "{{ odf_label }}"
 
 - name: '[POSTINSTALL][MACHINESET] Display the data for the {{ node_labels }} machinesets'
   debug:
