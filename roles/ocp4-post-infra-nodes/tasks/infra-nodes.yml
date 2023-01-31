@@ -40,6 +40,10 @@
     namespace: openshift-machine-api
   register: amimaster0
 
+- name: DEBUG
+  debug:
+    var: amimaster0
+
 - name: '[POSTINSTALL][MACHINESET] Build the {{ node_labels }} machineset facts'
   set_fact:
     machineset:
