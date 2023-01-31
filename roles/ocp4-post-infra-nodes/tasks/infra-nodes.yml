@@ -86,6 +86,7 @@
   register: r_infra_nodes
   until:
   - r_infra_nodes.resources | length | int == infra_node_replicas | int
+  - r_infra_nodes.resources.0.status.conditions | selectattr('type', 'match', '^Ready$') | map(attribute='status') | join | bool == True
   delay: 60
   retries: 30
 

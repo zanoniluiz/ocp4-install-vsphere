@@ -65,10 +65,10 @@
       fail_on_error: yes 
   when: bkp_etcd_nfs == True
 
-- name: '[DEBUG] - command'
-  debug:
-    msg:
-      - "{{ files_path }}/oc --kubeconfig {{ kubeconfig }} --namespace {{ ns_bkp_etcd }} create job --from=cronjob/openshift-backup-local --insecure-skip-tls-verify test-bkp"
+#- name: '[DEBUG] - command'
+#  debug:
+#    msg:
+#      - "{{ files_path }}/oc --kubeconfig {{ kubeconfig }} --namespace {{ ns_bkp_etcd }} create job --from=cronjob/openshift-backup-local --insecure-skip-tls-verify test-bkp"
 
 - name: '[POSTINSTALL][BKP-ETCD] Create Job Test BKP ETCD LOCAL'
   command: "{{ files_path }}/oc --kubeconfig {{ kubeconfig }} --namespace {{ ns_bkp_etcd }} create job --from=cronjob/openshift-backup-local --insecure-skip-tls-verify test-bkp"
