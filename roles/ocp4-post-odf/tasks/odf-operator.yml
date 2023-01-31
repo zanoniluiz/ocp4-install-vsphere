@@ -1,6 +1,15 @@
 ---
-- name: '[POSTINSTALL][ODF] Setup ODF Operator'
+
+- name: '[POSTINSTALL][ODF] Setup ODF Operator 4.10'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
-    definition: "{{ lookup('template', 'templates/odf-operator.yml') }}"
+    definition: "{{ lookup('template', 'templates/odf-operator-4-10.yml') }}"
+  when: ocp4_version | regex_search('.*4.10.*')
+
+- name: '[POSTINSTALL][ODF] Setup ODF Operator 4.10'
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition: "{{ lookup('template', 'templates/odf-operator-4-12.yml') }}"
+  when: ocp4_version | regex_search('.*4.12.*')
