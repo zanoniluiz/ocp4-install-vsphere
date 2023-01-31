@@ -16,8 +16,8 @@ spec:
     metadata:
       labels:
         machine.openshift.io/cluster-api-cluster: {{ machineset.infrastructure_id }}
-        machine.openshift.io/cluster-api-machine-role: {{ machineset.node_labels.0 }}
-        machine.openshift.io/cluster-api-machine-type: {{ machineset.node_labels.0 }}
+        machine.openshift.io/cluster-api-machine-role: {{ infra_label }}
+        machine.openshift.io/cluster-api-machine-type: {{ infra_label }}
         machine.openshift.io/cluster-api-machineset: {{ machineset.infrastructure_id }}-{{ machineset.name_identifier }}
     spec:
       lifecycleHooks: {}
