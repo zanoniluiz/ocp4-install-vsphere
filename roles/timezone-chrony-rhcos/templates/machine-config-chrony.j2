@@ -10,7 +10,7 @@ storage:
     mode: 0644 
     overwrite: true
     contents:
-      inline: |
+      inline: | 
 {%- for server in ntp_server %}
         server {{ server }} iburst
 {% endfor %}
