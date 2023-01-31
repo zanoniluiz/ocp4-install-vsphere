@@ -53,3 +53,9 @@
         name: "ocp4-post-bkp-etcd"
       when:
         - bkp_etcd_post_install == True
+
+    - name: '[OCP4-AUTO-INSTALL][POST-INSTALL] Backup Files'
+      include_role:
+        name: "backup-files"
+      when:
+        - backup-files == True

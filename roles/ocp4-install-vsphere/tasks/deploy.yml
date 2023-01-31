@@ -23,19 +23,3 @@
 - name: '[INSTALL] Print Logs Install - Info Cluster...'
   debug:
     var: log_install.stdout_lines
-
-- name: '[INSTALL] Gzip Install files...'
-  archive:
-    path: 
-    - "{{ deploy_path }}/.openshift_install_state.json"
-    - "{{ deploy_path }}/.openshift_install_state.json"
-    - "{{ deploy_path }}/.openshift_install.log"
-    - "{{ deploy_path }}/terraform.tfvars.json"
-    - "{{ deploy_path }}/terraform.tfstate"
-    - "{{ deploy_path }}/metadata.json"
-    - "{{ deploy_path }}/terraform.aws.auto.tfvars.json"
-    - "{{ deploy_path }}/openshift-install"
-    - "{{ deploy_path }}/install-config.yaml.bck"
-    - "{{ user_path }}/.ssh/*"
-    dest: "{{ bkp_path }}/{{ ocp4_cluster_name }}-{{ ocp4_base_domain }}-{{ ocp4_version }}-install.tar.gz"
-    format: gz

@@ -1,0 +1,16 @@
+---
+# tasks file for roles/backup-files
+
+- name: '[POST-INSTALL] Backup of installation files...'
+  archive:
+    path: 
+    - "{{ deploy_path }}/.openshift_install_state.json"
+    - "{{ deploy_path }}/.openshift_install_state.json"
+    - "{{ deploy_path }}/.openshift_install.log"
+    - "{{ deploy_path }}/*.json"
+    - "{{ deploy_path }}/*.tfstate"
+    - "{{ deploy_path }}/install-config.yaml.bck"
+    - "{{ user_path }}/.ssh/*"
+    - "{{ files_path }}/*"
+    dest: "{{ bkp_path }}/{{ ocp4_cluster_name }}-{{ ocp4_base_domain }}-{{ ocp4_version }}-install.tar.gz"
+    format: gz
