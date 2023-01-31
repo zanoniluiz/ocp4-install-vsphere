@@ -1,11 +1,20 @@
 ---
 
-- name: '[POSTINSTALL] Create Files Machine Config Timezone'
+- name: '[POSTINSTALL] Create Butane File Machine Config Timezone'
   template:
     src: machine-config-chrony.j2
     dest: "{{ files_path }}/machine-config-chrony.bu"
   when: config_chrony == True
 
+- name: '[POSTINSTALL] Download Butane'
+  get_url:
+    url: "{{ butane }}"
+    dest: "{{ files_path }}/{{ butane }}"
+    mode: 0755
+
+- name: '[POSTINSTALL] Generate Machine Config Chrony'
+  shell:
+    cmd: "{{ files_path }}/{{ butane }} {{ files_path }}/machine-config-chrony.bu -o {{ files_path }}/machine-config-chrony.yaml"
 #- name: '[POSTINSTALL][ODF] Setup ODF Operator 4.10'
 #  k8s:
 #    kubeconfig: "{{ kubeconfig }}"

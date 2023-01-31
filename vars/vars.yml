@@ -5,6 +5,7 @@ ocp4_cluster_name: "ocp"
 kubeconfig: "{{ deploy_path }}/auth/kubeconfig"
 local_kubeconfig: '~/.kube/{{ cluster_name }}'
 installCreateFolder: False
+butane: "https://mirror.openshift.com/pub/openshift-v4/clients/butane/latest/butane"
 
 dns_api: "api.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
 dns_ingress: "random.apps.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
