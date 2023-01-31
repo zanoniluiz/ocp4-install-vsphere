@@ -18,7 +18,7 @@ infra_post_install: True
 install_logging: True
 bkp_etcd_post_install: True
 install_odf: True
-backup-files: True
+backup_files: True
 
 
 #### Only in Tower-mode
