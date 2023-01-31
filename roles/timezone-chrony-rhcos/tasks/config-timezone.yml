@@ -6,7 +6,7 @@
     dest: "{{ files_path }}/machine-config-timezone.yaml"
   when: config_timezone == True
 
-- name: '[POSTINSTALL][ODF] Setup ODF Operator 4.10'
+- name: '[POSTINSTALL] Apply Machine Config Timezone'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present

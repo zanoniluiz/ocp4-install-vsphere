@@ -18,13 +18,13 @@
     cmd: "{{ files_path }}/butane {{ files_path }}/machine-config-chrony.bu -o {{ files_path }}/machine-config-chrony.yml"
   when: config_chrony == True
 
-- name: '[POSTINSTALL][ODF] Setup ODF Operator 4.10'
+- name: '[POSTINSTALL] Apply Machine Config Chrony'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     state: present
     definition: "{{ lookup('file', '{{ files_path }}/machine-config-chrony.yml') }}"
   when: config_timezone == True
-  
+
 #- name: '[POSTINSTALL][ODF] Setup ODF Operator 4.10'
 #  k8s:
 #    kubeconfig: "{{ kubeconfig }}"
