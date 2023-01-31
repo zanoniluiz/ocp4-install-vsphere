@@ -9,7 +9,7 @@
 - name: '[POSTINSTALL] Download Butane'
   get_url:
     url: "{{ butane }}"
-    dest: "{{ files_path }}/{{ butane }}"
+    dest: "{{ files_path }}/butane"
     mode: 0755
 
 - name: '[POSTINSTALL] Generate Machine Config Chrony'
