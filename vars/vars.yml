@@ -1,5 +1,5 @@
 #General
-ocp4_version: '4.12.0'
+ocp4_version: '4.10.47'
 ocp4_base_domain: "zmlabs.co"
 ocp4_cluster_name: "ocp"
 kubeconfig: "{{ deploy_path }}/auth/kubeconfig"
