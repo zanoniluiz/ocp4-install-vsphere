@@ -14,7 +14,7 @@ storage:
 {%- for server in ntp_server %}
         
         server {{ server }} iburst
-{% endfor -%}
+{%- endfor %}
         driftfile /var/lib/chrony/drift
         makestep 1.0 3
         rtcsync
