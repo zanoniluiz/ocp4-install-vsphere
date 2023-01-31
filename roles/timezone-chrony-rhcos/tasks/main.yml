@@ -1,0 +1,5 @@
+---
+# tasks file for roles/timezone-chrony-rhcos
+
+- import_tasks: config-timezone.yml
+- import_tasks: config-chrony.yml

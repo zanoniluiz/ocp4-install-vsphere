@@ -1,0 +1,33 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: worker-custom-timezone-configuration
+spec:
+  config:
+    ignition:
+      config: {}
+      security:
+        tls: {}
+      timeouts: {}
+      version: 2.2.0
+    networkd: {}
+    passwd: {}
+    storage: {}
+    systemd:
+      units:
+      - contents: |
+          [Unit]
+          Description=set timezone
+          After=network-online.target
+
+          [Service]
+          Type=oneshot
+          ExecStart=timedatectl set-timezone {{ timezone }}
+
+          [Install]
+          WantedBy=multi-user.target
+        enabled: true
+        name: custom-timezone.service
+  osImageURL: ""

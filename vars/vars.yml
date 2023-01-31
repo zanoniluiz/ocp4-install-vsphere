@@ -17,8 +17,9 @@ only_post_install: False
 infra_post_install: False
 install_logging: False
 bkp_etcd_post_install: False
-install_odf: True
+install_odf: False
 backup_files: False
+set_timezone_chrony: True
 
 
 #### Only in Tower-mode
@@ -92,3 +93,10 @@ coresPerSocketOdf: "4"
 memoryMBOdf: "16384"
 replicasOdf: "3"
 
+#TimeZone and chrony
+config_timezone: True
+config_chrony: True
+timezone: America/Sao_Paulo
+ntp_server:
+  - 200.160.7.186
+  - 200.160.0.8

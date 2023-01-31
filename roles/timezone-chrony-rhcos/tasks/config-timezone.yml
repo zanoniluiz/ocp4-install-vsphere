@@ -1,0 +1,13 @@
+---
+
+- name: '[POSTINSTALL] Create Files Machine Config Timezone'
+  template:
+    src: machine-config-timezone.j2
+    dest: "{{ files_path }}/machine-config-timezone.yaml"
+  when: config_timezone == True
+
+#- name: '[POSTINSTALL][ODF] Setup ODF Operator 4.10'
+#  k8s:
+#    kubeconfig: "{{ kubeconfig }}"
+#    state: present
+#    definition: "{{ lookup('template', 'machine-config-timezone.j2') }}"

@@ -54,6 +54,12 @@
       when:
         - bkp_etcd_post_install == True
 
+    - name: '[OCP4-AUTO-INSTALL][POST-INSTALL][TIME] Configure Timezone and Chrony'
+      include_role:
+        name: "timezone-chrony-rhcos"
+      when:
+        - set_timezone_chrony == True
+
     - name: '[OCP4-AUTO-INSTALL][POST-INSTALL] Backup Files'
       include_role:
         name: "backup-files"
