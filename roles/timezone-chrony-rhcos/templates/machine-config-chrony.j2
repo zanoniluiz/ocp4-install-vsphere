@@ -13,7 +13,7 @@ storage:
       inline: | 
 {%- for server in ntp_server %}
         
-        server {{ server }} iburst
+        server {{ server -}} iburst
 {% endfor %}
         driftfile /var/lib/chrony/drift
         makestep 1.0 3
