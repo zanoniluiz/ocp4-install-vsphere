@@ -11,14 +11,14 @@ dns_ingress: "random.apps.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
 
 #Modules
 #NOTA: Set TRUE on the modules you want implemented
-check_pre_reqs: True
-pre_reqs_install: True
-only_post_install: True
-infra_post_install: True
-install_logging: True
-bkp_etcd_post_install: True
+check_pre_reqs: False
+pre_reqs_install: False
+only_post_install: False
+infra_post_install: False
+install_logging: False
+bkp_etcd_post_install: False
 install_odf: True
-backup_files: True
+backup_files: False
 
 
 #### Only in Tower-mode
