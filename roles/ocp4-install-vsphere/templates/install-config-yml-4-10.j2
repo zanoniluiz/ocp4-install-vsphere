@@ -38,13 +38,11 @@ networking:
   - {{ service_Network }}
 platform:
   vsphere:
-    apiVIP:
-    - {{ apiVip }}
+    apiVIP: {{ apiVip }}
     cluster: {{ vsphereCluster }}
     datacenter: {{ vsphereDatacenter }}
     defaultDatastore: {{ vsphereDatastore }}
-    ingressVIP:
-    - {{ ingressVip }}
+    ingressVIP: {{ ingressVip }}
     network: {{ vsphereNetwork }}
     password: {{ vspherePassword }}
     username: {{ vsphereUsername }}
