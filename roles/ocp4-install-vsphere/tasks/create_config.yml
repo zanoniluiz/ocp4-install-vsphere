@@ -7,7 +7,7 @@
 
 - name: '[INSTALL_CONFIG] Generate config install-config.yaml'
   template:
-    src: "{{ template_config }}"
+    src: install-config-yml-4-10.j2
     dest: "{{ deploy_path }}/install-config.yaml"
   when: ocp4_version | regex_search('.*4.10.*')
 
