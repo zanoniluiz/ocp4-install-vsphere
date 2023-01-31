@@ -1,6 +1,6 @@
 # User Path
 
-install_path: "~/ocp-ansible"
+install_path: "~/install-ocp"
 user_path: "{{ install_path }}/{{ ocp4_cluster_name }}"
 deploy_path: "{{ install_path }}/{{ ocp4_cluster_name }}/deploy"
 files_path: "{{ install_path }}/{{ ocp4_cluster_name }}/files"
