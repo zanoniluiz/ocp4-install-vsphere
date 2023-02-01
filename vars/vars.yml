@@ -12,15 +12,15 @@ dns_ingress: "random.apps.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
 
 #Modules
 #NOTA: Set TRUE on the modules you want implemented
-check_pre_reqs: False
-pre_reqs_install: False
-only_post_install: False
-infra_post_install: False
-install_logging: False
-bkp_etcd_post_install: False
-install_odf: False
-backup_files: False
-set_timezone_chrony: False
+check_pre_reqs: True
+pre_reqs_install: True
+only_post_install: True
+infra_post_install: True
+install_logging: True
+bkp_etcd_post_install: True
+install_odf: True
+backup_files: True
+set_timezone_chrony: True
 set_auth: True
 
 #### Only in Tower-mode
@@ -105,3 +105,4 @@ ntp_server:
 #Authentication
 config_htpasswd: True
 config_ldap: True
+cluster_role_htpasswd: cluster-admin
