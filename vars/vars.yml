@@ -13,21 +13,21 @@ dns_ingress: "random.apps.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
 #DNS
 ocp4_dnszone: '{{ ocp4_cluster_name }}.{{ ocp4_base_domain }}'
 
-#Workers
+#Workers - Define size for the machines Workers
 diskSizeWorker: "120"
 cpuWorkers: "4"
 coresPerWorkers: "4"
 memoryMBWorkers: "16384"
 replicasWorker: "3"
 
-#Masters
+#Masters - Define size for the machines Master
 diskSizeMaster: "120"
 cpuMaster: "4"
 coresPerSocketMaster: "4"
 memoryMBMaster: "16384"
 replicasMaster: "3"
 
-#Infras
+#Infras - Define size for the machines Infra
 infra_label: infra
 infra_nodes: True
 infra_node_replicas: "3"
@@ -37,23 +37,23 @@ coresPerSocketInfra: "8"
 memoryMBInfra: "32764"
 replicasInfra: "3"
 
-#Network
+#Network - Define networks for the PODs, Service and MachineCRD
 cluster_Network: "10.128.0.0/14"
 machine_Network: "10.0.0.0/24"
 service_Network: "172.30.0.0/16"
 
-#Monitoring
+#Monitoring - Define size the disks for the monitoring and storageClass
 prometheusSizeGB: "40Gi"
 alertManagerSizeGB: "2Gi"
 storageClassMonitoring: "thin-csi"
 
-#Logging
-logging: True
+#Logging - Enable cluster logging, define node_selector and channels operators for the OLO
+#logging: True
 clo_node_selector: "node-role.kubernetes.io/infra="
 es_channel: "stable" #Define the ES version of the operator
 olo_channel: "stable" #Define the ClusterLogging version of the operator
 
-#Logging Instance
+#Logging Instance - Set definitions for the Cluster Logging
 app_max_age: '7d'
 infra_max_age: '7d'
 audit_max_age: '7d'
@@ -63,12 +63,12 @@ es_redundancy: "ZeroRedundancy"
 es_storageClass: "thin-csi"
 es_diskSize: "200Gi"
 
-#BKP_ETCD
+#BKP_ETCD - Define namespace for backup etcd and type archive the backup NFS|Local
 ns_bkp_etcd: "ocp-etcd-backup"
 bkp_etcd_nfs: False
 bkp_etcd_local: True
 
-#ODF
+#ODF - Define size for the machines ODF and if create machine config pool for the ODF nodes
 mcp_odf: False
 odf_label: odf
 diskSizeOdf: "120"
@@ -77,7 +77,7 @@ coresPerSocketOdf: "4"
 memoryMBOdf: "16384"
 replicasOdf: "3"
 
-#TimeZone and chrony
+#TimeZone and chrony - Set NTP Servers and Timezone
 config_timezone: True
 config_chrony: True
 timezone: America/Sao_Paulo
@@ -85,7 +85,7 @@ ntp_server:
   - 200.160.7.186
   - 200.160.0.8
 
-#Authentication
+#Authentication - Enable authentications for the Htpasswd and/or LDAP, configure cluster role for the user htpasswd, remove kubeadmin and remove self-provisioner
 config_htpasswd: True
 config_ldap: True
 cluster_role_htpasswd: cluster-admin

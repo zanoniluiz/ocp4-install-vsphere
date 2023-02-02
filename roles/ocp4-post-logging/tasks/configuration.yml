@@ -8,7 +8,7 @@
 
 - name: '[POSTINSTALL][LOGGING] Wait for operator to be ready'
   pause:
-    seconds: 60
+    seconds: 90
 
 - name: '[POSTINSTALL][LOGGING] Wait for OpenShift Logging to be available'
   k8s_info:
