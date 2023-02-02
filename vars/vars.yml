@@ -10,22 +10,6 @@ butane: "https://mirror.openshift.com/pub/openshift-v4/clients/butane/latest/but
 dns_api: "api.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
 dns_ingress: "random.apps.{{ ocp4_cluster_name}}.{{ ocp4_base_domain }}."
 
-#Modules
-#NOTA: Set TRUE on the modules you want implemented
-check_pre_reqs: True
-pre_reqs_install: True
-only_post_install: True
-infra_post_install: True
-install_logging: True
-bkp_etcd_post_install: True
-install_odf: True
-backup_files: True
-set_timezone_chrony: True
-set_auth: True
-
-#### Only in Tower-mode
-tower_used: False
-
 #DNS
 ocp4_dnszone: '{{ ocp4_cluster_name }}.{{ ocp4_base_domain }}'
 
@@ -57,7 +41,6 @@ replicasInfra: "3"
 cluster_Network: "10.128.0.0/14"
 machine_Network: "10.0.0.0/24"
 service_Network: "172.30.0.0/16"
-
 
 #Monitoring
 prometheusSizeGB: "40Gi"
@@ -106,3 +89,5 @@ ntp_server:
 config_htpasswd: True
 config_ldap: True
 cluster_role_htpasswd: cluster-admin
+ocp4_remove_kubeadmin: True
+remove_self_provisioner: True

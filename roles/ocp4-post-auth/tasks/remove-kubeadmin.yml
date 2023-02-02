@@ -1,0 +1,15 @@
+---
+
+- name: '[POST-OAUTH] Remove kubeadmin tasks'
+  block:
+    - name: '[REMOVE-KUBEADMIN] Remove kubeadmin user secret'
+      k8s:
+        kubeconfig: "{{ kubeconfig }}"
+        state: absent
+        api_version: v1
+        kind: Secret
+        namespace: kube-system
+        name: kubeadmin
+  when:
+  - ocp4_htpasswd_admin_user is defined
+  - ocp4_remove_kubeadmin == True

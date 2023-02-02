@@ -1,0 +1,69 @@
+---
+
+- name: '[OCP4-POST-OAUTH][OCP4-LDAP] Check that ocp4_idm_install is defined'
+  when:
+  - ocp4_idm_install is not defined
+  fail:
+    msg: "ocp4_idm_install is not defined"
+
+- name: '[OCP4-POST-OAUTH][OCP4-LDAP] Setup OpenTLC LDAP Authentication'
+  block:
+  - name: '[OCP4-POST-OAUTH][OCP4-LDAP] Check for LDAP Bind Password'
+    fail:
+      msg: LDAP Authentication is configured but LDAP BindPassword (ocp4_idm_ldap_bindPassword) is not defined.
+    when: ocp4_idm_ldap_bindPassword is not defined
+
+  - name: '[OCP4-POST-OAUTH][OCP4-LDAP] Get IPA CA Cert'
+    get_url:
+      url: "{{ ocp4_idm_ldap_ca_url }}"
+      dest: "{{ user_path }}/ipa-ca.crt"
+      mode: 0660
+
+  - name: '[OCP4-POST-OAUTH][OCP4-LDAP] Ensure IPA CA Cert is absent'
+    k8s:
+      state: absent
+      api_version: v1
+      kind: ConfigMap
+      name: ldap-ca-cert
+      namespace: openshift-config
+
+  - name: '[OCP4-POST-OAUTH][OCP4-LDAP] Create IPA CA Cert ConfigMap'
+    shell: "{{ container_dir }}/tools oc create configmap ldap-ca-cert --from-file=ca.crt={{ user_path }}/ipa-ca.crt -n openshift-config"
+
+  - name: '[OCP4-POST-OAUTH][OCP4-LDAP] Ensure LDAP Bind Password Secret is absent'
+    k8s:
+      state: absent
+      api_version: v1
+      kind: Secret
+      name: ldap-secret
+      namespace: openshift-config
+
+  - name: '[OCP4-POST-OAUTH][OCP4-LDAP] Create LDAP Bind Password Secret'
+    shell: "{{ container_dir }}/tools oc create secret generic ldap-secret --from-literal=bindPassword=\"{{ ocp4_idm_ldap_bindPassword }}\" -n openshift-config"
+
+  - name: '[OCP4-POST-OAUTH][OCP4-LDAP] Update OAuth Configuration'
+    k8s:
+      state: present
+      merge_type:
+      - strategic-merge
+      - merge
+      definition: "{{ lookup('template', item ) | from_yaml }}"
+    loop:
+    - ./templates/oauth-ldap.j2
+
+  - name: '[OCP4-POST-OAUTH][OCP4-LDAP] Print User Information for OpenTLC LDAP'
+    debug:
+      msg: "{{ item }}"
+    loop:
+    - "user.info: OpenTLC LDAP Authentication is enabled on this cluster."
+    - "user.info: Use your OpenTLC user and Password to log into this cluster."
+    - "user.info: User `{{ ocp4_idm_admin_user }}` is a cluster-admin"
+
+- name: '[OCP4-POST-OAUTH][OCP4-LDAP] Set up Cluster Admin User'
+  k8s:
+    state: present
+    merge_type:
+    - strategic-merge
+    - merge
+    definition: "{{ lookup('template', './templates/cluster_role_binding.j2') | from_yaml }}"
+  when: ocp4_idm_admin_user is defined

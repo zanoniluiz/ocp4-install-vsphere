@@ -3,6 +3,7 @@
   hosts: localhost
   connection: local
   vars_files:
+    - vars/modules.yml
     - vars/vars.yml
     - vault/vault.yml
   collections:

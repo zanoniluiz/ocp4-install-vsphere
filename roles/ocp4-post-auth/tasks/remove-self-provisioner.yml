@@ -1,0 +1,5 @@
+---
+- name: '[POST-OAUTH][SELF PROVISIONER] Remove the self provisioner'
+  shell: "{{ files_path }}/oc --kubeconfig {{ kubeconfig }} --insecure-skip-tls-verify adm policy remove-cluster-role-from-group self-provisioner system:authenticated:oauth || true"
+  when:
+    - remove_self_provisioner == True
