@@ -82,6 +82,37 @@ echo "yourpasswordfancy" >> .vault-password-file
 
 Abra o arquivo **vars/modules.yml** e define **True** ou **False**
 
+```
+#Checking pre requisites OCP
+check_pre_reqs: True
+
+#Deploy pre requisites Playbooks
+pre_reqs_install: True
+
+#Install OCP 4.10 or 4.12
+only_post_install: True
+
+#Configure Infra Nodes
+infra_post_install: True
+
+#Install OCP Logging
+install_logging: True
+
+#Configure Backup OCP
+bkp_etcd_post_install: True
+
+#Install Operator ODF and configure Machines 
+install_odf: True
+
+#Backup files to use deploy and configuration
+backup_files: True
+
+#Configure timezone and Chrony
+set_timezone_chrony: True
+
+#Configure Auth (Htpasswd and/or LDAP)
+set_auth: True
+```
 Execute e espere um pouco:
 
 ```
