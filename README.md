@@ -66,3 +66,84 @@ ocp4_htpasswd_admin_password: "senha"
 ```
 
 para obter o pull_secret vá para [OCP4 Install](https://cloud.redhat.com/openshift/install)
+
+* Gere o arquivo .vault-password-file e coloque a senha
+
+```
+touch .vault-password-file
+echo "yourpasswordfancy" >> .vault-password-file
+```
+
+## Uso
+
+### Implantação automatizada end2end do cluster Openshift4 (end2end)
+
+* Ativando os módulos
+
+Abra o arquivo **vars/modules.yml** e define **True** ou **False**
+
+Execute e espere um pouco:
+
+```
+./auto_deploy.sh
+```
+
+## Implantação personalizada
+
+O contêiner para a instalação pode ser usado para Post Install ou Day2Operations sem implantar todo o cluster
+
+* Para implantar apenas day2ops:
+
+```
+ansible-playbook -i ,localhost deploy_day2ops.yml --ask-vault-pass
+```
+
+* Somente para instalação e sem day2ops:
+
+```
+ansible-playbook -i ,localhost deploy_only.yml --ask-vault-pass
+```
+
+* Para instalar apenas um day2ops específico:
+
+```
+ansible-playbook -i ,localhost deploy_only_<MY_DAY2OPS>.yml
+```
+
+## Personalizações (WIP)
+
+#### Kubeconfig
+
+O instalador examinará o kubeconfig específico em {{ user_path }}/auth/kubeconfig, mas você pode usar
+seu próprio kubeconfig para implantar este day2ops sempre que estiver usando:
+
+```
+kubeconfig: ~/.kube/ocp4-opentlc
+```
+
+#### Variáveis Openshift Cluster
+
+```
+ocp4_version: '4.10.47'
+cluster_name: 'ocp'
+ocp4_base_domain: 'example.com'
+
+#Workers - Define size for the machines Workers
+diskSizeWorker: "120"
+cpuWorkers: "4"
+coresPerWorkers: "4"
+memoryMBWorkers: "16384"
+replicasWorker: "3"
+
+#Masters - Define size for the machines Master
+diskSizeMaster: "120"
+cpuMaster: "4"
+coresPerSocketMaster: "4"
+memoryMBMaster: "16384"
+replicasMaster: "3"
+
+#Network - Define networks for the PODs, Service and MachineCRD
+cluster_Network: "10.128.0.0/14"
+machine_Network: "10.0.0.0/24"
+service_Network: "172.30.0.0/16"
+```
