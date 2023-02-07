@@ -1,5 +1,4 @@
-# User Path
-
+#Paths
 install_path: "/root/install-ocp"
 user_path: "{{ install_path }}/{{ ocp4_cluster_name }}"
 deploy_path: "{{ install_path }}/{{ ocp4_cluster_name }}/deploy"
