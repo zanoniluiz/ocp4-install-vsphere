@@ -1,0 +1,20 @@
+---
+- name: '[OCP4-AUTO-INSTALL] Deploy an OpenShift Data Foundation  cluster'
+  hosts: localhost
+  connection: local
+  vars_files:
+    - vars/modules.yml
+    - vars/vars.yml
+    - vault/vault.yml
+  collections:
+    - community.kubernetes
+    - community.crypto
+    - ansible.posix
+    - community.general
+    
+  tasks:
+    - name: '[OCP4-AUTO-INSTALL][POST-INSTALL][ODF] Install and configure ODF'
+      include_role:
+        name: "ocp4-post-odf"
+      when:
+        - install_odf == True

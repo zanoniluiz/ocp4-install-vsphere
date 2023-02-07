@@ -1,0 +1,25 @@
+#General
+ocp4_pull_secret: ''
+sshKeyPub: ""
+
+#vSphere
+apiVip: "10.1.1.9"
+ingressVip: "10.1.1.10"
+vsphereCluster: "Cluster"
+vsphereDatacenter: "Datacenter"
+vsphereDatastore: "Datastore"
+vsphereNetwork: "PG_OCP"
+vspherePassword: "redhat123"
+vsphereUsername: "openshift@example.com"
+vsphereVcenter: "vsphere.example.com"
+vsphereFolder: "/Datacenter/vm/ocp/"
+vsphereDiskType: "thin"
+
+#Authentication
+##LDAP
+ldap_bind: 
+pass_bind:
+
+#Htpasswd
+ocp4_htpasswd_admin: "admin-local"
+ocp4_htpasswd_admin_password: "redhat123"
