@@ -26,7 +26,13 @@ As principais características são:
 ### Requirements
 
 * Python 3.9
+* Ansible
 * Algúns módulos pip (por exemplo, boto3, kubernetes, openshift e pylint)
+
+```
+yum install python39 -y
+pip-3.9 install ansible
+```
 
 ### Criar/Personalizar as Variáveis yaml
 
