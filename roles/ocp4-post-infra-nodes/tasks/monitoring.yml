@@ -24,7 +24,7 @@
     name: '{{ item }}'
     namespace: openshift-monitoring
     wait_sleep: 5
-    wait_timeout: 20
+    wait_timeout: 60
     validate_certs: false
   loop:
   - alertmanager-main-0
