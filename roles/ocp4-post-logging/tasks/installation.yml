@@ -94,7 +94,7 @@
 
 - name: '[POSTINSTALL][LOGGING] Wait for operator to be ready'
   pause:
-    seconds: 60
+    seconds: 120
 
 - name: '[POSTINSTALL][LOGGING] Wait for Elasticsearch to be available'
   k8s_info:
