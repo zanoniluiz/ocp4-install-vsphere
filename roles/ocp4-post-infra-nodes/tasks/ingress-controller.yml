@@ -1,0 +1,10 @@
+- name: '[POSTINSTALL][INFRA-NODES] Configure Ingress Controllers NodeSelector and Tolerations'
+  when: 
+  - ocp4_workload_machinesets_cluster_version is version_compare('4.10', '>')
+  - configure_ingress_controller == True
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    merge_type:
+    - merge
+    definition: "{{ lookup('template', 'ingress-controller-default.j2') }}"

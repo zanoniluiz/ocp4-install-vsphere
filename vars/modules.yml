@@ -13,6 +13,9 @@ only_post_install: True
 
 #Configure Infra Nodes
 infra_post_install: True
+configure_monitoring_infra: True
+configure_image_registry: True
+configure_ingress_controller: True
 
 #Install OCP Logging
 install_logging: True

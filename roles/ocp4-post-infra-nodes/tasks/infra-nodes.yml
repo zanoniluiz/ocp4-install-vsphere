@@ -2,7 +2,7 @@
 
 - name: '[POSTINSTALL][INFRA-NODES] Wait for Cluster to be ready'
   pause:
-    seconds: 60
+    seconds: 120
 
 - name: '[POSTINSTALL][INFRA-NODES] Grab some global cluster trivia for git to use'
   k8s_info:
@@ -19,7 +19,7 @@
     definition: "{{ lookup('template', 'mcp-infra.yml') }}"
     validate_certs: false
 
-- name: '[OCP4-POSTINSTALL][MACHINESET] Fetch cluster information about the Infrastructure'
+- name: '[OCP4-POSTINSTALL][INFRA-NODES] Fetch cluster information about the Infrastructure'
   k8s_info:
     kubeconfig: "{{ kubeconfig }}"
     api_version: config.openshift.io/v1
@@ -27,11 +27,11 @@
     name: cluster
   register: cluster_info
 
-- name: '[POSTINSTALL][MACHINESET] Show info about the cluster of OCP4'
-  debug:
-    msg: "{{ cluster_info }}"
+#- name: '[POSTINSTALL][INFRA-NODES] Show info about the cluster of OCP4'
+#  debug:
+#    msg: "{{ cluster_info }}"
 
-- name: '[POSTINSTALL][MACHINESET] Search and fetch Infra id in {{ cluster_info.resources.0.status.infrastructureName }}-master-0 machine'
+- name: '[POSTINSTALL][INFRA-NODES] Search and fetch Infra id in {{ cluster_info.resources.0.status.infrastructureName }}-master-0 machine'
   k8s_info:
     kubeconfig: "{{ kubeconfig }}"
     api_version: machine.openshift.io/v1beta1
@@ -40,24 +40,24 @@
     namespace: openshift-machine-api
   register: amimaster0
 
-- name: '[POSTINSTALL][MACHINESET] Build the {{ node_labels }} machineset facts'
+- name: '[POSTINSTALL][INFRA-NODES] Build the {{ node_labels }} machineset facts'
   set_fact:
     machineset:
       infrastructure_id: "{{ cluster_info.resources.0.status.infrastructureName }}"
       node_labels: "{{ infra_label }}"
       name_identifier: "{{ infra_label }}"
 
-- name: '[POSTINSTALL][MACHINESET] Display the data for the {{ node_labels }} machinesets'
-  debug:
-    var: machineset
+#- name: '[POSTINSTALL][INFRA-NODES] Display the data for the {{ node_labels }} machinesets'
+#  debug:
+#    var: machineset
 
-- name: '[POSTINSTALL][MACHINESET] Create File Machineset for the{{ node_labels }} machineset'
+- name: '[POSTINSTALL][INFRA-NODES] Create File Machineset for the {{ node_labels }} machineset'
   template:
     src: machineset-infra-vsphere.j2
     dest: "{{ files_path }}/machineset-infra-vsphere.yaml"
   when: infra_post_install == True
 
-- name: '[POSTINSTALL][MACHINESET] Create the {{ infra_label }} machineset'
+- name: '[POSTINSTALL][INFRA-NODES] Create the {{ infra_label }} machineset'
   k8s:
     kubeconfig: "{{ kubeconfig }}"
     name: openshift-machine-api
@@ -104,52 +104,55 @@
 
 - name: '[POSTINSTALL][INFRA-NODES] Wait for Infra Nodes to be ready'
   pause:
-    seconds: 60
+    seconds: 120
 
-- name: '[POSTINSTALL][INFRA-NODES] - Print Cluster Version'
-  debug:
-    msg: 
-    - "Cluster Version is: {{ ocp4_workload_machinesets_cluster_version }}"
+#- name: '[POSTINSTALL][INFRA-NODES] - Print Cluster Version'
+#  debug:
+#    msg: 
+#    - "Cluster Version is: {{ ocp4_workload_machinesets_cluster_version }}"
 
-- name: '[POSTINSTALL][INFRA-NODES] Configure Ingress Controllers and Image Registry'
-  when: ocp4_workload_machinesets_cluster_version is version_compare('4.10', '>')
-  k8s:
-    kubeconfig: "{{ kubeconfig }}"
-    state: present
-    merge_type:
-    - merge
-    definition: "{{ lookup('template', '{{ item }}') }}"
-  loop:
-  - ingress-controller-default.j2
-  - image-registry.j2
+#- name: '[POSTINSTALL][INFRA-NODES] Configure Ingress Controllers and Image Registry'
+#  when: ocp4_workload_machinesets_cluster_version is version_compare('4.10', '>')
+#  k8s:
+#    kubeconfig: "{{ kubeconfig }}"
+#    state: present
+#    merge_type:
+#    - merge
+#    definition: "{{ lookup('template', '{{ item }}') }}"
+#  loop:
+#  - ingress-controller-default.j2
+#  - image-registry.j2
 
-- name: '[POSTINSTALL][INFRA-NODES] Configure Cluster Monitoring'
-  when: ocp4_workload_machinesets_cluster_version is version_compare('4.10', '>')
-  k8s:
-    kubeconfig: "{{ kubeconfig }}"
-    state: present
-    merge_type:
-    - merge
-    definition: "{{ lookup('template', '{{ item }}') }}"
-  loop:
-  - configmap-cluster-monitoring.j2
+#- name: '[POSTINSTALL][INFRA-NODES] Configure Cluster Monitoring'
+#  when: ocp4_workload_machinesets_cluster_version is version_compare('4.10', '>')
+#  k8s:
+#    kubeconfig: "{{ kubeconfig }}"
+#    state: present
+#    merge_type:
+#    - merge
+#    definition: "{{ lookup('template', '{{ item }}') }}"
+#  loop:
+#  - configmap-cluster-monitoring.j2
+#  when: configure_monitoring_infra == True
 
-- name: '[POSTINSTALL][INFRA-NODES] Wait for Cluster Monitoring Replace Resources'
-  pause:
-    seconds: 60
+#- name: '[POSTINSTALL][INFRA-NODES] Wait for Cluster Monitoring Replace Resources'
+#  pause:
+#    seconds: 60
+#  when: configure_monitoring_infra == True
 
-- name: '[POSTINSTALL][INFRA-NODES] Wait for Cluster Monitoring to be available'
-  k8s_info:
-    kubeconfig: "{{ kubeconfig }}"
-    kind: Pod
-    wait: yes
-    name: '{{ item }}'
-    namespace: openshift-monitoring
-    wait_sleep: 5
-    wait_timeout: 20
-    validate_certs: false
-  loop:
-  - alertmanager-main-0
-  - alertmanager-main-1
-  - prometheus-k8s-0
-  - prometheus-k8s-1
+#- name: '[POSTINSTALL][INFRA-NODES] Wait for Cluster Monitoring to be available'
+#  k8s_info:
+#    kubeconfig: "{{ kubeconfig }}"
+#    kind: Pod
+#    wait: yes
+#    name: '{{ item }}'
+#    namespace: openshift-monitoring
+#    wait_sleep: 5
+#    wait_timeout: 20
+#    validate_certs: false
+#  loop:
+#  - alertmanager-main-0
+#  - alertmanager-main-1
+#  - prometheus-k8s-0
+#  - prometheus-k8s-1
+#  when: configure_monitoring_infra == True

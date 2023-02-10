@@ -1,0 +1,34 @@
+- name: '[POSTINSTALL][INFRA-NODES] Configure Cluster Monitoring'
+  when: 
+  - ocp4_workload_machinesets_cluster_version is version_compare('4.10', '>')
+  - configure_monitoring_infra == True
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    merge_type:
+    - merge
+    definition: "{{ lookup('template', '{{ item }}') }}"
+  loop:
+  - configmap-cluster-monitoring.j2
+
+- name: '[POSTINSTALL][INFRA-NODES] Wait for Cluster Monitoring Replace Resources'
+  pause:
+    seconds: 60
+  when: configure_monitoring_infra == True
+
+- name: '[POSTINSTALL][INFRA-NODES] Wait for Cluster Monitoring to be available'
+  k8s_info:
+    kubeconfig: "{{ kubeconfig }}"
+    kind: Pod
+    wait: yes
+    name: '{{ item }}'
+    namespace: openshift-monitoring
+    wait_sleep: 5
+    wait_timeout: 20
+    validate_certs: false
+  loop:
+  - alertmanager-main-0
+  - alertmanager-main-1
+  - prometheus-k8s-0
+  - prometheus-k8s-1
+  when: configure_monitoring_infra == True
