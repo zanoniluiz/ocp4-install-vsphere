@@ -26,11 +26,15 @@ As principais características são:
 ### Requirements
 
 * Python 3.9
+* Unzip
 * Ansible
 * Algúns módulos pip (por exemplo, boto3, kubernetes, openshift e pylint)
 
 ```
-yum install python39 -y
+yum install python39 unzip -y
+```
+
+```
 pip-3.9 install ansible
 ```
 
