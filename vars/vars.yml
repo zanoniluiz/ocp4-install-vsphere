@@ -87,7 +87,7 @@ ntp_server:
 
 #Authentication - Enable authentications for the Htpasswd and/or LDAP, configure cluster role for the user htpasswd, remove kubeadmin and remove self-provisioner
 config_htpasswd: True
-config_ldap: True
+config_ldap: False
 cluster_role_htpasswd: cluster-admin
 ocp4_remove_kubeadmin: True
 remove_self_provisioner: True

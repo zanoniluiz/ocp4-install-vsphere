@@ -2,3 +2,5 @@
 # tasks file for roles/ocp4-post-auth
 
 - import_tasks: htpasswd.yml
+- import_tasks: remove-kubeadmin.yml
+- import_tasks: remove-self-provisioner.yml

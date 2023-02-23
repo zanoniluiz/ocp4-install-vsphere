@@ -11,5 +11,5 @@
         namespace: kube-system
         name: kubeadmin
   when:
-  - ocp4_htpasswd_admin_user is defined
+  - ocp4_htpasswd_admin is defined
   - ocp4_remove_kubeadmin == True
